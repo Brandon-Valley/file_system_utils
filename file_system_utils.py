@@ -179,15 +179,19 @@ def make_file_if_not_exist(file_path):
         file = open(file_path, "w") 
         file.close()
         
-        
-def delete_if_exists(path):
-    if os.path.exists(path):
-        if   os.path.isdir(path):
-            shutil.rmtree(path)
-        elif os.path.isfile(path):
-            os.remove(path)
-        else:
-            raise Exception('ERROR:  Gave something that is not a file or a dir, bad path: ', path)
+# works for single path str or list of paths
+def delete_if_exists(path_str_or_l):
+    if isinstance(path_str_or_l, str):
+        path_str_or_l = [path_str_or_l]
+    
+    for path in path_str_or_l:
+        if os.path.exists(path):
+            if   os.path.isdir(path):
+                shutil.rmtree(path)
+            elif os.path.isfile(path):
+                os.remove(path)
+            else:
+                raise Exception('ERROR:  Gave something that is not a file or a dir, bad path: ', path)
 
 
 ''' will do nothing if src_file_path == dest_file_path '''
