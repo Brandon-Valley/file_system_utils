@@ -76,7 +76,7 @@ def raise_exception_if_object_not_exist(obj_path, custom_msg = None):
         else:
             raise Exception(custom_msg)
         
-        
+
 
 ''' VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV '''
 '''                                                                           
@@ -177,7 +177,23 @@ def make_file_if_not_exist(file_path):
         parent_dir_path = get_parent_dir_path_from_path(file_path)
         make_dir_if_not_exist(parent_dir_path)
         file = open(file_path, "w") 
-        file.close()
+        file.close()     
+
+
+def delete_single_fs_obj_fast(path):
+    if os.path.exists(path):
+        if   os.path.isdir(path):
+            shutil.rmtree(path)
+        elif os.path.isfile(path):
+            os.remove(path)
+        else:
+            raise Exception('ERROR:  Gave something that is not a file or a dir, bad path: ', path)
+
+
+def delete_fs_obj_l_fast(path_l):
+    for path in path_l:
+        delete_single_fs_obj_fast(path)   
+        
         
 # works for single path str or list of paths
 def delete_if_exists(path_str_or_l):
@@ -185,13 +201,7 @@ def delete_if_exists(path_str_or_l):
         path_str_or_l = [path_str_or_l]
     
     for path in path_str_or_l:
-        if os.path.exists(path):
-            if   os.path.isdir(path):
-                shutil.rmtree(path)
-            elif os.path.isfile(path):
-                os.remove(path)
-            else:
-                raise Exception('ERROR:  Gave something that is not a file or a dir, bad path: ', path)
+        delete_single_fs_obj_fast(path)
 
 
 ''' will do nothing if src_file_path == dest_file_path '''
@@ -236,9 +246,9 @@ def delete_all_files_in_dir(dir_path):
         try:
             if os.path.isfile(file_path):
                 os.unlink(file_path)
-            #elif os.path.isdir(file_path): shutil.rmtree(file_path)
         except Exception as e:
             print(e)
+            
             
 def delete_all_dirs_in_dir_if_exists(dir_path):
     if os.path.exists(dir_path):
@@ -247,9 +257,24 @@ def delete_all_dirs_in_dir_if_exists(dir_path):
             try:
                 if os.path.isdir(file_path):
                     shutil.rmtree(file_path)
-                #elif os.path.isdir(file_path): shutil.rmtree(file_path)
             except Exception as e:
                 print(e)
+                
+''' dont_del_path_l can be abs or rel paths '''                
+def delete_all_dir_content_except_given_in_root(dir_path, dont_del_fs_obj_name_l):
+    if os.path.exists(dir_path):
+        dir_content_path_l = get_dir_content_l(dir_path, object_type = 'all', content_type = 'abs_path')
+        del_path_l = []
+        
+        for dir_content_path in dir_content_path_l:
+            if not get_basename_from_path(dir_content_path) in dont_del_fs_obj_name_l:
+                del_path_l.append(dir_content_path)
+                
+        # if VVV throws error, make exception to say so
+        delete_fs_obj_l_fast(del_path_l)
+
+        
+        
     
 ''' copy all files and dirs in given dir into new dir '''
 def copy_dir_contents_to_dest(src_dir_path, dest_dir_path):
@@ -324,11 +349,15 @@ def get_parent_dir_path_from_path(path):
 ''' -- VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV -- All Utilities Standard Footer -- VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV -- '''
 sys.modules = og_sys_modules
 ''' ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ '''
-if __name__ == '__main__'    :    
+if __name__ == '__main__':    
     print('In Main:  file_system_utils')
+    dir_path = 'C:\\Users\\mt204e\\Documents\\projects\\Bitbucket_repo_setup\\ip_auto_tests\\ip__auto_test__1'
+
+    delete_all_dir_content_except_given_in_root(dir_path, ['.git', 's.txt'])
+
 
 #     print(get_parent_dir_path_from_path("C:\\Users\\mt204e\\Documents\\projects\\Bitbucket_repo_setup\\bitbucket_repo_setup_scripts\\submodules\\testing_utils\\util_submodules\\exception_utils\\exception_utils.py"))
-    print(is_file("C:\\Users\\mt204e\\Documents\\projects\\Bitbucket_repo_setup\\bitbucket_repo_setup_scripts\\submodules\\testing_utils\\util_submodules\\exception_utils\\exception_usdfetils.py"))
+#     print(is_file("C:\\Users\\mt204e\\Documents\\projects\\Bitbucket_repo_setup\\bitbucket_repo_setup_scripts\\submodules\\testing_utils\\util_submodules\\exception_utils\\exception_usdfetils.py"))
 
 #     print(os.path.abspath(""))
 #     print(get_names_of_files_in_dir("C:\\Users\\Brandon\\Documents\\Personal_Projects\\my_movie_tools_big_data"))
