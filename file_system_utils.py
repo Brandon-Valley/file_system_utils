@@ -181,9 +181,28 @@ def make_file_if_not_exist(file_path):
 
 
 def delete_single_fs_obj_fast(path):
+    def onerror(func, path, exc_info):
+        """
+        Error handler for ``shutil.rmtree``.
+    
+        If the error is due to an access error (read only file)
+        it attempts to add write permission and then retries.
+    
+        If the error is for another reason it re-raises the error.
+    
+        Usage : ``shutil.rmtree(path, onerror=onerror)``
+        """
+        import stat
+        if not os.access(path, os.W_OK):
+            # Is the error an access error ?
+            os.chmod(path, stat.S_IWUSR)
+            func(path)
+        else:
+            raise
+        
     if os.path.exists(path):
         if   os.path.isdir(path):
-            shutil.rmtree(path)
+            shutil.rmtree(path, ignore_errors=False, onerror=onerror)
         elif os.path.isfile(path):
             os.remove(path)
         else:
@@ -351,9 +370,51 @@ sys.modules = og_sys_modules
 ''' ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ '''
 if __name__ == '__main__':    
     print('In Main:  file_system_utils')
-    dir_path = 'C:\\Users\\mt204e\\Documents\\projects\\Bitbucket_repo_setup\\ip_auto_tests\\ip__auto_test__1'
+    
+    
+    import errno, os, stat, shutil
 
-    delete_all_dir_content_except_given_in_root(dir_path, ['.git', 's.txt'])
+    def handleRemoveReadonly(func, path, exc):
+        excvalue = exc[1]
+        if func in (os.rmdir, os.remove) and excvalue.errno == errno.EACCES:
+            os.chmod(path, stat.S_IRWXU| stat.S_IRWXG| stat.S_IRWXO) # 0777
+            func(path)
+        else:
+            raise
+        
+        
+    def onerror(func, path, exc_info):
+        """
+        Error handler for ``shutil.rmtree``.
+    
+        If the error is due to an access error (read only file)
+        it attempts to add write permission and then retries.
+    
+        If the error is for another reason it re-raises the error.
+    
+        Usage : ``shutil.rmtree(path, onerror=onerror)``
+        """
+        import stat
+        if not os.access(path, os.W_OK):
+            # Is the error an access error ?
+            os.chmod(path, stat.S_IWUSR)
+            func(path)
+        else:
+            raise
+    
+    shutil.rmtree("C:\\Users\\mt204e\\Documents\\projects\\Bitbucket_repo_setup\\ip_auto_tests\\ip__auto_test__3\\axilite_adc122S706 - Copy", ignore_errors=False, onerror=onerror)
+        
+    
+    
+    
+    
+    
+#     shutil.rmtree("C:\\Users\\mt204e\\Documents\\projects\\Bitbucket_repo_setup\\ip_auto_tests\\ip__auto_test__3\\axilite_adc122S706")
+    
+#     
+#     dir_path = 'C:\\Users\\mt204e\\Documents\\projects\\Bitbucket_repo_setup\\ip_auto_tests\\ip__auto_test__1'
+# 
+#     delete_all_dir_content_except_given_in_root(dir_path, ['.git', 's.txt'])
 
 
 #     print(get_parent_dir_path_from_path("C:\\Users\\mt204e\\Documents\\projects\\Bitbucket_repo_setup\\bitbucket_repo_setup_scripts\\submodules\\testing_utils\\util_submodules\\exception_utils\\exception_utils.py"))
