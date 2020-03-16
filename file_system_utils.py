@@ -31,6 +31,9 @@ import ntpath
 '''
 ''' VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV '''
 
+def abs_path(in_path):
+    return os.path.abspath(in_path)
+
 def is_dir(in_path):
     return os.path.isdir(in_path)
 
@@ -279,6 +282,7 @@ def delete_all_dirs_in_dir_if_exists(dir_path):
             except Exception as e:
                 print(e)
                 
+                
 ''' dont_del_path_l can be abs or rel paths '''                
 def delete_all_dir_content_except_given_in_root(dir_path, dont_del_fs_obj_name_l):
     if os.path.exists(dir_path):
@@ -292,7 +296,6 @@ def delete_all_dir_content_except_given_in_root(dir_path, dont_del_fs_obj_name_l
         # if VVV throws error, make exception to say so
         delete_fs_obj_l_fast(del_path_l)
 
-        
         
     
 ''' copy all files and dirs in given dir into new dir '''
@@ -353,6 +356,24 @@ def get_basename_from_path(path):
 
 def get_parent_dir_path_from_path(path):
     return os.path.dirname(path)
+    
+    
+    
+''' VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV '''
+'''                                                                           
+        Common Use Cases
+'''
+''' VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV '''
+    
+def path_l_to_abs_path_l(path_l):
+    abs_path_l = []
+    for path in path_l:
+        abs_path_l.append(abs_path(path))
+    
+    return abs_path_l
+    
+    
+    
     
     
 ''' VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV '''
