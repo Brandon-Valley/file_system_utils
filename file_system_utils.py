@@ -356,6 +356,10 @@ def get_basename_from_path(path):
 
 def get_parent_dir_path_from_path(path):
     return os.path.dirname(path)
+
+def get_top_level_parent_dir_name(path):
+    return path.split('\\')[0].split('/')[0]
+    
     
     
     
