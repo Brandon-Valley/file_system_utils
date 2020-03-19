@@ -21,7 +21,7 @@ if util_submodule_import_check_count != len(util_submodule_l)    :    raise Exce
 import glob
 import os
 import shutil
-from distutils.dir_util import copy_tree
+# from distutils.dir_util import copy_tree
 import ntpath
 
 
@@ -234,17 +234,23 @@ def rename_file_overwrite(src_file_path, dest_file_path):
 
 
 ''' can take a single str path for path_l '''
-def copy_objects_to_dest(path_l, dest_parent_dir_path):
-    if type(path_l) == 'class <str>':
-        path_l = [path_l]
-        
+def copy_objects_to_dest(path_l_or_str, dest_parent_dir_path):
+    if isinstance(path_l_or_str, str):
+        path_l_or_str = [path_l_or_str]
+
     make_dir_if_not_exist(dest_parent_dir_path)
     
-    for path in path_l:
-        if   os.path.isdir(path):
-            copy_tree(path, dest_parent_dir_path)
+    for path in path_l_or_str:
+        
+        if  os.path.isdir(path):
+            path_basename = get_basename_from_path(path)
+            dest_dir_path = dest_parent_dir_path + '//' + path_basename
+            delete_if_exists(dest_parent_dir_path)
+            shutil.copytree(path, dest_dir_path)
+            
         elif os.path.isfile(path):
             shutil.copy(path, dest_parent_dir_path)
+    
 
         
 '''copies then deletes'''
@@ -396,39 +402,46 @@ sys.modules = og_sys_modules
 if __name__ == '__main__':    
     print('In Main:  file_system_utils')
     
+#     s = "C:\\Users\\mt204e\\Documents\\projects\\Bitbucket_repo_setup\\repos\\ip_repo\\axi_MinIM_1.0\\bd"
+#     d = "C:\\Users\\mt204e\\Documents\\projects\\Bitbucket_repo_setup\\test"
+#     
+#     copy_objects_to_dest(path_l_or_str = s, dest_parent_dir_path = d)
     
-    import errno, os, stat, shutil
-
-    def handleRemoveReadonly(func, path, exc):
-        excvalue = exc[1]
-        if func in (os.rmdir, os.remove) and excvalue.errno == errno.EACCES:
-            os.chmod(path, stat.S_IRWXU| stat.S_IRWXG| stat.S_IRWXO) # 0777
-            func(path)
-        else:
-            raise
-        
-        
-    def onerror(func, path, exc_info):
-        """
-        Error handler for ``shutil.rmtree``.
     
-        If the error is due to an access error (read only file)
-        it attempts to add write permission and then retries.
-    
-        If the error is for another reason it re-raises the error.
-    
-        Usage : ``shutil.rmtree(path, onerror=onerror)``
-        """
-        import stat
-        if not os.access(path, os.W_OK):
-            # Is the error an access error ?
-            os.chmod(path, stat.S_IWUSR)
-            func(path)
-        else:
-            raise
-    
-    shutil.rmtree("C:\\Users\\mt204e\\Documents\\projects\\Bitbucket_repo_setup\\ip_auto_tests\\ip__auto_test__3\\axilite_adc122S706 - Copy", ignore_errors=False, onerror=onerror)
-        
+#     
+#     
+#     import errno, os, stat, shutil
+# 
+#     def handleRemoveReadonly(func, path, exc):
+#         excvalue = exc[1]
+#         if func in (os.rmdir, os.remove) and excvalue.errno == errno.EACCES:
+#             os.chmod(path, stat.S_IRWXU| stat.S_IRWXG| stat.S_IRWXO) # 0777
+#             func(path)
+#         else:
+#             raise
+#         
+#         
+#     def onerror(func, path, exc_info):
+#         """
+#         Error handler for ``shutil.rmtree``.
+#     
+#         If the error is due to an access error (read only file)
+#         it attempts to add write permission and then retries.
+#     
+#         If the error is for another reason it re-raises the error.
+#     
+#         Usage : ``shutil.rmtree(path, onerror=onerror)``
+#         """
+#         import stat
+#         if not os.access(path, os.W_OK):
+#             # Is the error an access error ?
+#             os.chmod(path, stat.S_IWUSR)
+#             func(path)
+#         else:
+#             raise
+#     
+#     shutil.rmtree("C:\\Users\\mt204e\\Documents\\projects\\Bitbucket_repo_setup\\ip_auto_tests\\ip__auto_test__3\\axilite_adc122S706 - Copy", ignore_errors=False, onerror=onerror)
+#         
     
     
     
