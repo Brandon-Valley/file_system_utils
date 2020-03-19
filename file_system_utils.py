@@ -245,7 +245,7 @@ def copy_objects_to_dest(path_l_or_str, dest_parent_dir_path):
         if  os.path.isdir(path):
             path_basename = get_basename_from_path(path)
             dest_dir_path = dest_parent_dir_path + '//' + path_basename
-            delete_if_exists(dest_parent_dir_path)
+            delete_if_exists(dest_dir_path)
             shutil.copytree(path, dest_dir_path)
             
         elif os.path.isfile(path):
