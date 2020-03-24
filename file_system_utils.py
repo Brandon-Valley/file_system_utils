@@ -381,6 +381,14 @@ def path_l_to_abs_path_l(path_l):
         abs_path_l.append(abs_path(path))
     
     return abs_path_l
+
+
+def path_l_to_basename_l(path_l):
+    abs_path_l = []
+    for path in path_l:
+        abs_path_l.append(get_basename_from_path(path))
+    
+    return abs_path_l
     
     
     
