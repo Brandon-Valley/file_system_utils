@@ -259,6 +259,12 @@ def move_objects_to_dest(path_l, dest_dir_path):
     
     for path in path_l:
         delete_if_exists(path)
+        
+        
+'''copies then deletes'''
+def move_dir_contents_to_dest(in_dir_path, dest_dir_path): 
+    path_l = get_dir_content_l(in_dir_path, object_type = 'all', content_type = 'abs_path')
+    move_objects_to_dest(path_l, dest_dir_path)
 
 
 
