@@ -1,7 +1,7 @@
 ''' -- VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV -- All Utilities Standard Header -- VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV -- '''
 import sys, os    ;     sys.path.insert(1, os.path.join(sys.path[0], os.path.dirname(os.path.abspath(__file__)))) # to allow for relative imports, delete any imports under this line
 
-util_submodule_l = []  # list of all imports from local util_submodules that could be imported elsewhere to temporarily remove from sys.modules
+util_submodule_l = ['exception_utils']  # list of all imports from local util_submodules that could be imported elsewhere to temporarily remove from sys.modules
 
 # temporarily remove any modules that could conflict with this file's local util_submodule imports
 og_sys_modules = sys.modules    ;    pop_l = [] # save the original sys.modules to be restored at the end of this file
@@ -12,7 +12,7 @@ util_submodule_import_check_count = 0 # count to make sure you don't add a local
 
 ''' -- VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV -- All Utilities Standard: Local Utility Submodule Imports  -- VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV -- '''
 
-
+from util_submodules.exception_utils   import exception_utils as eu       ; util_submodule_import_check_count += 1
 
 ''' ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ '''
 if util_submodule_import_check_count != len(util_submodule_l)    :    raise Exception("ERROR:  You probably added a local util_submodule import without adding it to the util_submodule_l")
@@ -395,8 +395,24 @@ def path_l_to_basename_l(path_l):
         abs_path_l.append(get_basename_from_path(path))
     
     return abs_path_l
+   
     
+def path_l_remove(path_l, to_remove_str_or_l, removal_mode = 'basename_equals'):
+    eu.error_if_param_type_not_in_whitelist(path_l,             ['list', 'tuple'])
+    eu.error_if_param_type_not_in_whitelist(to_remove_str_or_l, ['list', 'tuple', 'str'])    
+    eu.error_if_param_key_not_in_whitelist(removal_mode, ['basename_equals', 'in_basename', 'path_equals', 'in_path'])
     
+    if isinstance(to_remove_str_or_l, str):
+        to_remove_str_or_l = [to_remove_str_or_l]
+    
+    def path_l_remove__basename_equals():
+        return [path for path in path_l if not get_basename_from_path(path) in to_remove_str_or_l]
+
+
+    if removal_mode == 'basename_equals':
+        return path_l_remove__basename_equals()
+    else:
+        raise Exception('ERROR:  NOT IMPLEMENTED')
     
     
     
