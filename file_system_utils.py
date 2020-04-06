@@ -57,6 +57,7 @@ def get_size(start_path):
     return total_size
 
 
+''' file.tcl will return ".tcl" '''
 def get_file_extension(in_file_path):
     if not is_file(in_file_path):
         raise Exception("ERROR:  in_file_path must point to a file that exists")
