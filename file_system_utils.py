@@ -18,11 +18,18 @@ from util_submodules.exception_utils   import exception_utils as eu       ; util
 if util_submodule_import_check_count != len(util_submodule_l)    :    raise Exception("ERROR:  You probably added a local util_submodule import without adding it to the util_submodule_l")
 ''' ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ '''
 
+
+
 import glob
 import os
 import shutil
 # from distutils.dir_util import copy_tree
 import ntpath
+from collections import namedtuple
+
+
+
+Path_basename_nt = namedtuple('Path_basename_nt', 'path basename')
 
 
 ''' VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV '''
@@ -117,8 +124,17 @@ def get_dir_content_l(in_dir_path, object_type = 'all', content_type = 'abs_path
         raise Exception("ERROR:  in_dir_path must point to dir")
     if object_type not in ['all', 'dir', 'file']:
         raise Exception("ERROR:  Invalid object_type: ", object_type, "  object_type must be one of:  ['all', 'dir', 'file']")
-    if content_type not in ['abs_path', 'rel_path', 'name']:
-        raise Exception("ERROR:  Invalid content_type: ", content_type, "  object_type must be one of:  ['abs_path', 'rel_path', 'name']")
+    if content_type not in ['abs_path', 'rel_path', 'name', 'abs_path_basename_nt', 'rel_path_basename_nt']:
+        raise Exception("ERROR:  Invalid content_type: ", content_type, "  object_type must be one of:  ['abs_path', 'rel_path', 'name', 'abs_path_basename_nt', 'rel_path_basename_nt']")
+    
+
+    # change content_type if needed for recursion
+    og_content_type = content_type
+    if content_type == 'abs_path_basename_nt':
+        content_type = 'abs_path'
+    elif content_type == 'rel_path_basename_nt':
+        content_type = 'rel_path'
+    
     
     abs_in_dir_path = get_abs_path_from_rel_path(in_dir_path)
     object_name_l = os.listdir(abs_in_dir_path) # list of names of all dirs and files in dir
@@ -149,8 +165,12 @@ def get_dir_content_l(in_dir_path, object_type = 'all', content_type = 'abs_path
                 
                 if recurs_dirs:
                     content_l += get_dir_content_l(abs_obj_path, object_type, content_type, recurs_dirs)
+                    
                 
-
+    # make final container if needed
+    if og_content_type in ('abs_path_basename_nt', 'rel_path_basename_nt'):
+        return path_l_to_path_basename_ntl(content_l)
+    
     return content_l
 
 
@@ -419,6 +439,31 @@ def path_l_remove(path_l, to_remove_str_or_l, removal_mode = 'basename_equals'):
     else:
         raise Exception('ERROR:  NOT IMPLEMENTED')
     
+
+''' can take list of paths or single path '''    
+def path_l_to_path_basename_ntl(path_l):    
+    eu.error_if_param_type_not_in_whitelist(path_l, ['list', 'tuple', 'str'])
+    
+    # correct to list if given single path
+    if isinstance(path_l, str):
+        path_l = [path_l]
+        
+    # fill ntl
+    path_basename_ntl = []
+    
+    for path in path_l:
+        print(path)#``````````````````````````````````````````````````````````
+        basename = get_basename_from_path(path)
+        path_basename_ntl.append(Path_basename_nt(path, basename))
+        
+    return path_basename_ntl
+    
+        
+    
+    
+    
+    
+    
     
     
 ''' VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV '''
@@ -439,12 +484,15 @@ if __name__ == '__main__':
     
     
     in_dir_path = 'C:\\repos\\converted_pic_repos__TESTING_501 - Copy\\PIC213'
-    l = get_dir_content_l(in_dir_path, object_type = 'all', content_type = 'abs_path', recurs_dirs = True)
+#     l = get_dir_content_l(in_dir_path, object_type = 'all', content_type = 'abs_path', recurs_dirs = True)
+    l = get_dir_content_l(in_dir_path, object_type = 'all', content_type = 'abs_path_basename_nt', recurs_dirs = True)
 
-    print(l)
-
+#     print(l)
+# 
     for n in l:
         print(n)
+
+#     print(path_l_to_path_basename_ntl(l[2]))
     
     
 #     s = "C:\\Users\\mt204e\\Documents\\projects\\Bitbucket_repo_setup\\repos\\ip_repo\\axi_MinIM_1.0\\bd"
