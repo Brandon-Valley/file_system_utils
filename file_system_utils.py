@@ -112,7 +112,7 @@ def get_relative_path_of_files_in_dir(dir_path, file_type):
 
 
 ''' in_dir_path - can be either abs or relative path '''
-def get_dir_content_l(in_dir_path, object_type = 'all', content_type = 'abs_path'):
+def get_dir_content_l(in_dir_path, object_type = 'all', content_type = 'abs_path', recurs_dirs = False):
     if is_dir(in_dir_path) != True and in_dir_path != '':
         raise Exception("ERROR:  in_dir_path must point to dir")
     if object_type not in ['all', 'dir', 'file']:
@@ -137,15 +137,19 @@ def get_dir_content_l(in_dir_path, object_type = 'all', content_type = 'abs_path
     
     # fill content_l
     for object_name in object_name_l:
-        if object_type   == 'all':
+        if object_type   == 'all' and not recurs_dirs:
             content_l.append(header + object_name)
         else:
             abs_obj_path = abs_in_dir_path + '//' + object_name
             
-            if   object_type == 'file' and is_file(abs_obj_path):
+            if   object_type in ('all', 'file') and is_file(abs_obj_path):
                 content_l.append(header + object_name)
-            elif object_type == 'dir'  and is_dir (abs_obj_path):
+            elif object_type in ('all', 'dir')  and is_dir (abs_obj_path):
                 content_l.append(header + object_name)
+                
+                if recurs_dirs:
+                    content_l += get_dir_content_l(abs_obj_path, object_type, content_type, recurs_dirs)
+                
 
     return content_l
 
@@ -432,6 +436,16 @@ sys.modules = og_sys_modules
 ''' ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ '''
 if __name__ == '__main__':    
     print('In Main:  file_system_utils')
+    
+    
+    in_dir_path = 'C:\\repos\\converted_pic_repos__TESTING_501 - Copy\\PIC213'
+    l = get_dir_content_l(in_dir_path, object_type = 'all', content_type = 'abs_path', recurs_dirs = True)
+
+    print(l)
+
+    for n in l:
+        print(n)
+    
     
 #     s = "C:\\Users\\mt204e\\Documents\\projects\\Bitbucket_repo_setup\\repos\\ip_repo\\axi_MinIM_1.0\\bd"
 #     d = "C:\\Users\\mt204e\\Documents\\projects\\Bitbucket_repo_setup\\test"
