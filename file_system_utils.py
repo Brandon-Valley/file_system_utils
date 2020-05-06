@@ -64,13 +64,17 @@ def get_size(start_path):
     return total_size
 
 
+''' not protected so it works on files and urls - file.tcl will return ".tcl"  '''
+def get_extention(in_file_path):
+    return os.path.splitext(in_file_path)[1]
+
+
 ''' file.tcl will return ".tcl" '''
 def get_file_extension(in_file_path):
     if not is_file(in_file_path):
         raise Exception("ERROR:  in_file_path must point to a file that exists")
     
-    extension = os.path.splitext(in_file_path)[1]
-    return extension
+    return get_extention(in_file_path)
 
 
 ''' !!!!! ONLY WAY TO USE THIS FUNC:  file_system_utils.get_abs_path_to_parent_dir_of_file(__file__) !!!!!
