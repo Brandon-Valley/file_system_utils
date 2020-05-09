@@ -401,6 +401,11 @@ def get_parent_dir_path_from_path(path):
 def get_top_level_parent_dir_name(path):
     return path.split('\\')[0].split('/')[0]
     
+def is_abs(path):
+    '''
+        Path does not need to exist, just needs to be abs
+    '''
+    return os.path.isabs(path)
     
     
     
