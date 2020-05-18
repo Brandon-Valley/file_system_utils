@@ -377,7 +377,7 @@ def replace_extension(in_file_path, new_extension):
 
 def paths_equal(path_1_str_or_l, path_2_str_or_l):
     ''' Depreciated, use paths_compare()'''
-    return paths_compare(path_1_str_or_l, path_2_str_or_l, compare_mode = 'equal')
+    return paths_compare(path_1_str_or_l, path_2_str_or_l, compare_mode = 'paths_equal')
         
 
 def paths_compare(path_1_str_or_l, path_2_str_or_l, compare_mode = 'equal'):
@@ -386,7 +386,7 @@ def paths_compare(path_1_str_or_l, path_2_str_or_l, compare_mode = 'equal'):
         
         Compare Modes:
             
-            equal:
+            paths_equal:
                 True if 2 paths point to the same place - rel / abs
                 
             starts_with:
@@ -410,17 +410,17 @@ def paths_compare(path_1_str_or_l, path_2_str_or_l, compare_mode = 'equal'):
             
             abs_path_1 = os.path.abspath(path_1)
             abs_path_2 = os.path.abspath(path_2)
-            print('comparing: ')
-            print('    path_1_str_or_l: ', path_1_str_or_l)
-            print('    path_2_str_or_l: ', path_2_str_or_l)
-            print('    path_1: ', path_1)
-            print('    path_2: ', path_2)
-            print('    abs_path_1: ', abs_path_1)
-            print('    abs_path_2: ', abs_path_2)
-#             print()
-#             print('comparing: ', abs_path_1, abs_path_2)#``````````````````````````````````````````````````````````````````````````````````
             
-            if   compare_mode == 'equal':
+#             #`````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````
+#             print('comparing: ')
+#             print('    path_1_str_or_l: ', path_1_str_or_l)
+#             print('    path_2_str_or_l: ', path_2_str_or_l)
+#             print('    path_1: ', path_1)
+#             print('    path_2: ', path_2)
+#             print('    abs_path_1: ', abs_path_1)
+#             print('    abs_path_2: ', abs_path_2)
+            
+            if   compare_mode == 'paths_equal':
                 if abs_path_1 == abs_path_2:     
                     return True
                 
@@ -498,19 +498,22 @@ def path_l_remove(path_l, to_remove_str_or_l, removal_mode = 'basename_equals'):
     def path_l_remove__basename_equals():
         return [path for path in path_l if not get_basename_from_path(path) in to_remove_str_or_l]
 
-    def path_l_remove__paths_equal():
-        return [path for path in path_l if not paths_compare(path, to_remove_str_or_l, compare_mode = 'equals')]
+#     def path_l_remove__paths_equal():
+#         return [path for path in path_l if not paths_compare(path, to_remove_str_or_l, compare_mode = 'equals')]
+#     
+#     def path_l_remove__starts_with():
+#         return [path for path in path_l if not paths_compare(path, to_remove_str_or_l, compare_mode = 'starts_with')]
     
-    def path_l_remove__starts_with():
-        return [path for path in path_l if not paths_compare(path, to_remove_str_or_l, compare_mode = 'starts_with')]
-
+    def path_l_remove__if_not_paths_compare():
+        return [path for path in path_l if not paths_compare(path, to_remove_str_or_l, compare_mode = removal_mode)]
 
     if removal_mode == 'basename_equals':
         return path_l_remove__basename_equals()
-    elif removal_mode == 'paths_equal':
-        return path_l_remove__paths_equal()
-    elif removal_mode == 'starts_with':
-        return path_l_remove__starts_with()    
+    elif removal_mode in ['paths_equal', 'starts_with', 'is_component_name']:
+        return path_l_remove__if_not_paths_compare()
+#         return path_l_remove__paths_equal()
+#     elif removal_mode == 'starts_with':
+#         return path_l_remove__starts_with()    
     else:
         raise Exception('ERROR:  NOT IMPLEMENTED')
     
@@ -564,6 +567,8 @@ if __name__ == '__main__':
 #     print(paths_compare(p3, p1, compare_mode = 'starts_with'))
 
     print(paths_compare(p3, 'other', compare_mode = 'is_component_name'))
+    print(path_l_remove(path_l = p3, to_remove_str_or_l = 'other', removal_mode = 'is_component_name'))
+    print(path_l_remove(path_l = p3, to_remove_str_or_l = 'wwaaaaaaaaaaaaaa', removal_mode = 'paths_equal'))
 
     
 #     p2 = ['C:\\projects\\version_control_scripts', 'C:\\projects\\version_control_scripts\\CE']
