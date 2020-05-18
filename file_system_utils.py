@@ -126,7 +126,7 @@ def get_dir_content_l(in_dir_path, object_type = 'all', content_type = 'abs_path
     
     abs_in_dir_path = get_abs_path_from_rel_path(in_dir_path)
     object_name_l = os.listdir(abs_in_dir_path) # list of names of all dirs and files in dir
-    print('object_name_l: ', object_name_l)#``````````````````````````````````````````````````````````````````````````````````````````````````````````````````
+
     
     if content_type == 'name' and object_type == 'all':
         return object_name_l
