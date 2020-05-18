@@ -437,7 +437,7 @@ def path_l_to_basename_l(path_l):
 def path_l_remove(path_l, to_remove_str_or_l, removal_mode = 'basename_equals'):
     eu.error_if_param_type_not_in_whitelist(path_l,             ['list', 'tuple'])
     eu.error_if_param_type_not_in_whitelist(to_remove_str_or_l, ['list', 'tuple', 'str'])    
-    eu.error_if_param_key_not_in_whitelist(removal_mode, ['basename_equals', 'in_basename', 'path_equals', 'in_path'])
+    eu.error_if_param_key_not_in_whitelist(removal_mode, ['basename_equals', 'in_basename', 'paths_equal', 'in_path'])
     
     if isinstance(to_remove_str_or_l, str):
         to_remove_str_or_l = [to_remove_str_or_l]
@@ -446,10 +446,7 @@ def path_l_remove(path_l, to_remove_str_or_l, removal_mode = 'basename_equals'):
         return [path for path in path_l if not get_basename_from_path(path) in to_remove_str_or_l]
 
     def path_l_remove__paths_equal():
-        ret_path_l = []
-        
-        for path in path_l:
-            pass
+        return [path for path in path_l if not paths_equal(path, to_remove_str_or_l)]
 
 
     if removal_mode == 'basename_equals':
@@ -501,10 +498,10 @@ if __name__ == '__main__':
     print('In Main:  file_system_utils')
     
     p1 = 'C:\\projects\\version_control_scripts\\CE'
-    p2 = ['C:\\projects\\version_control_scripts', 'C:\\projects\\version_control_scripts\\C']
+    p2 = ['C:\\projects\\version_control_scripts', 'C:\\projects\\version_control_scripts\\CE']
     print(paths_equal(p1, p2))
 
-
+    print(path_l_remove(p2, p1, removal_mode = 'paths_equal'))
 
 #     app_dir_rel_path = 'app'
 #     start_dir = "C:\\projects\\version_control_scripts\\CE"
@@ -513,97 +510,6 @@ if __name__ == '__main__':
 #     
 #     paths_to_copy_trimmed_l = path_l_remove(paths_to_copy_l, [], removal_mode)
     
-
-
-#     print(path_l_to_path_basename_ntl(l[2]))
-    
-    
-#     s = "C:\\Users\\mt204e\\Documents\\projects\\Bitbucket_repo_setup\\repos\\ip_repo\\axi_MinIM_1.0\\bd"
-#     d = "C:\\Users\\mt204e\\Documents\\projects\\Bitbucket_repo_setup\\test"
-#     
-#     copy_objects_to_dest(path_l_or_str = s, dest_parent_dir_path = d)
-    
-    
-#     
-#     
-#     import errno, os, stat, shutil
-# 
-#     def handleRemoveReadonly(func, path, exc):
-#         excvalue = exc[1]
-#         if func in (os.rmdir, os.remove) and excvalue.errno == errno.EACCES:
-#             os.chmod(path, stat.S_IRWXU| stat.S_IRWXG| stat.S_IRWXO) # 0777
-#             func(path)
-#         else:
-#             raise
-#         
-#         
-#     def onerror(func, path, exc_info):
-#         """
-#         Error handler for ``shutil.rmtree``.
-#     
-#         If the error is due to an access error (read only file)
-#         it attempts to add write permission and then retries.
-#     
-#         If the error is for another reason it re-raises the error.
-#     
-#         Usage : ``shutil.rmtree(path, onerror=onerror)``
-#         """
-#         import stat
-#         if not os.access(path, os.W_OK):
-#             # Is the error an access error ?
-#             os.chmod(path, stat.S_IWUSR)
-#             func(path)
-#         else:
-#             raise
-#     
-#     shutil.rmtree("C:\\Users\\mt204e\\Documents\\projects\\Bitbucket_repo_setup\\ip_auto_tests\\ip__auto_test__3\\axilite_adc122S706 - Copy", ignore_errors=False, onerror=onerror)
-#         
-    
-    
-    
-    
-    
-#     shutil.rmtree("C:\\Users\\mt204e\\Documents\\projects\\Bitbucket_repo_setup\\ip_auto_tests\\ip__auto_test__3\\axilite_adc122S706")
-    
-#     
-#     dir_path = 'C:\\Users\\mt204e\\Documents\\projects\\Bitbucket_repo_setup\\ip_auto_tests\\ip__auto_test__1'
-# 
-#     delete_all_dir_content_except_given_in_root(dir_path, ['.git', 's.txt'])
-
-
-#     print(get_parent_dir_path_from_path("C:\\Users\\mt204e\\Documents\\projects\\Bitbucket_repo_setup\\bitbucket_repo_setup_scripts\\submodules\\testing_utils\\util_submodules\\exception_utils\\exception_utils.py"))
-#     print(is_file("C:\\Users\\mt204e\\Documents\\projects\\Bitbucket_repo_setup\\bitbucket_repo_setup_scripts\\submodules\\testing_utils\\util_submodules\\exception_utils\\exception_usdfetils.py"))
-
-#     print(os.path.abspath(""))
-#     print(get_names_of_files_in_dir("C:\\Users\\Brandon\\Documents\\Personal_Projects\\my_movie_tools_big_data"))
-    
-#     print(glob.glob("C:\\Users\\Brandon\\Documents\\Personal_Projects\\my_movie_tools_big_data" + '/*') )# * means all if need specific format then *.csv)
-#     print(paths_equal('ptest.py', "C:\\Users\\Brandon\\Documents\\Personal_Projects\\my_movie_tools\\ptest.py"))
-#     print(rename_file_overwrite('ptest.py', "C:\\Users\\Brandon\\Documents\\Personal_Projects\\my_movie_tools\\ptest.py"))
-    
-    
-    
-    
-#     in_dir_path = "C:\\Users\\Brandon\\Documents\\Personal_Projects\\my_movie_tools_big_data\\test_vids"
-#     out_parent_dir_path = "C:\\Users\\Brandon\\Documents\\Personal_Projects\\my_movie_tools_big_data\\out_dir"
-#     aaa_path = "C:\\Users\\Brandon\\Documents\\Personal_Projects\\my_movie_tools_big_data\\out_dir\\test_vids\\aaa.sss"
-#     mkv_path = "C:\\Users\\Brandon\\Documents\\Personal_Projects\\my_movie_tools_big_data\\test_vids\\Screen_MAKE_SUERE_THIS_WORKS_WITH_SPACE.mkv"
-#     l = ['.avi', '.mkv']
-#     
-#     print(replace_extension(mkv_path, 'mp4'))
-#     
-# #     print(get_file_extension(mkv_path) in l)
-#     
-#     
-# #     print(get_file_extension(aaa_path))
-
-
-
-
-
-
-
-
 
 
 
