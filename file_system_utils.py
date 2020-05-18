@@ -391,6 +391,11 @@ def paths_compare(path_1_str_or_l, path_2_str_or_l, compare_mode = 'equal'):
                 
             starts_with:
                 True if any path 1 starts with any path 2
+                
+            is_component_name:
+                True if given str is equal to any component of given path
+                    Ex:    (a\b\c, b)   -> True
+                           (a\box\c, b) -> False
     '''
     
     # make sure both params are lists
@@ -405,6 +410,14 @@ def paths_compare(path_1_str_or_l, path_2_str_or_l, compare_mode = 'equal'):
             
             abs_path_1 = os.path.abspath(path_1)
             abs_path_2 = os.path.abspath(path_2)
+            print('comparing: ')
+            print('    path_1_str_or_l: ', path_1_str_or_l)
+            print('    path_2_str_or_l: ', path_2_str_or_l)
+            print('    path_1: ', path_1)
+            print('    path_2: ', path_2)
+            print('    abs_path_1: ', abs_path_1)
+            print('    abs_path_2: ', abs_path_2)
+#             print()
 #             print('comparing: ', abs_path_1, abs_path_2)#``````````````````````````````````````````````````````````````````````````````````
             
             if   compare_mode == 'equal':
@@ -414,15 +427,19 @@ def paths_compare(path_1_str_or_l, path_2_str_or_l, compare_mode = 'equal'):
             elif compare_mode == 'starts_with':
                 if abs_path_1.startswith(abs_path_2):
                     return True
+                
+            elif compare_mode == 'is_component_name':
+                if path_2 in split_path_into_component_name_l(path_1):
+                    return True
                     
             else:
                 raise Exception('NOT IMPLEMENTED: compare_mode:' + compare_mode) 
 
-        return False
+    return False
         
 
-def get_rel_path_from_compare(path_1, path_2):
-    return os.path.relpath(path_1, path_2)
+def get_rel_path_from_compare(child_path, parent_path):
+    return os.path.relpath(child_path, parent_path)
 
 def get_abs_path_from_rel_path(in_rel_path):
     return os.path.abspath(in_rel_path)
@@ -441,6 +458,10 @@ def is_abs(path):
         Path does not need to exist, just needs to be abs
     '''
     return os.path.isabs(path)
+
+def split_path_into_component_name_l(path):
+    path = path.replace('\\', '//')
+    return path.strip('//').split('//')    
     
     
     
@@ -469,7 +490,7 @@ def path_l_to_basename_l(path_l):
 def path_l_remove(path_l, to_remove_str_or_l, removal_mode = 'basename_equals'):
     eu.error_if_param_type_not_in_whitelist(path_l,             ['list', 'tuple'])
     eu.error_if_param_type_not_in_whitelist(to_remove_str_or_l, ['list', 'tuple', 'str'])    
-    eu.error_if_param_key_not_in_whitelist(removal_mode, ['basename_equals', 'in_basename', 'paths_equal', 'in_path', 'starts_with'])
+    eu.error_if_param_key_not_in_whitelist(removal_mode, ['basename_equals', 'in_basename', 'paths_equal', 'in_path', 'starts_with', 'is_component_name'])
     
     if isinstance(to_remove_str_or_l, str):
         to_remove_str_or_l = [to_remove_str_or_l]
@@ -535,12 +556,14 @@ if __name__ == '__main__':
     print('In Main:  file_system_utils')
     
     p1 = 'C:\\Users\\mt204e\\Documents\\other\\test_dir'
-    p3 = ['C:\\Users\\mt204e\\Documents\\other', 'C:\\Users\\mt204e\\Documents\\other\\test_dir']
+    p3 = ['C:\\Users\\mt204e\\Documents\\other3', 'C:\\Users\\mt204e\\Documents\\other\\test_dir']
     
 #     print(get_dir_content_l(p1, object_type = 'all', content_type = 'rel_path', recurs_dirs = True, rel_to_path=p3))
 
-    print(paths_compare(p1, p3, compare_mode = 'starts_with'))
-    print(paths_compare(p3, p1, compare_mode = 'starts_with'))
+#     print(paths_compare(p1, p3, compare_mode = 'starts_with'))
+#     print(paths_compare(p3, p1, compare_mode = 'starts_with'))
+
+    print(paths_compare(p3, 'other', compare_mode = 'is_component_name'))
 
     
 #     p2 = ['C:\\projects\\version_control_scripts', 'C:\\projects\\version_control_scripts\\CE']
