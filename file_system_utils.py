@@ -134,7 +134,7 @@ def get_dir_content_l(in_dir_path, object_type = 'all', content_type = 'abs_path
     if   content_type == 'abs_path':
         header = abs_in_dir_path + '//' 
     elif content_type == 'rel_path':
-        raise Exception('ERROR: rel_path option not yet implemented')
+        raise Exception('ERROR: rel_path option not yet implemented') # look at get_relative_path_of_files_in_dir(dir_path, file_type)
     
     content_l = []
     
@@ -390,7 +390,8 @@ def paths_equal(path_1_str_or_l, path_2_str_or_l):
         return False
         
 
-
+def get_rel_path_from_compare(path_1, path_2):
+    return os.path.relpath(path_1, path_2)
 
 def get_abs_path_from_rel_path(in_rel_path):
     return os.path.abspath(in_rel_path)
@@ -497,20 +498,23 @@ def path_l_to_path_basename_ntl(path_l):
 if __name__ == '__main__':    
     print('In Main:  file_system_utils')
     
-    p1 = 'C:\\projects\\version_control_scripts\\CE'
-    p2 = ['C:\\projects\\version_control_scripts', 'C:\\projects\\version_control_scripts\\CE']
-    print(paths_equal(p1, p2))
+#     p1 = 'C:\\projects\\version_control_scripts\\CE'
+#     p2 = ['C:\\projects\\version_control_scripts', 'C:\\projects\\version_control_scripts\\CE']
+#     print(paths_equal(p1, p2))
+# 
+#     print(path_l_remove(p2, p1, removal_mode = 'paths_equal'))
 
-    print(path_l_remove(p2, p1, removal_mode = 'paths_equal'))
-
-#     app_dir_rel_path = 'app'
-#     start_dir = "C:\\projects\\version_control_scripts\\CE"
-#     
-#     paths_to_copy_l = get_dir_content_l(start_dir, 'all', 'abs_path')
-#     
+    start_dir = "C:\\projects\\version_control_scripts\\CE"
+    this_file_abs_path = os.path.dirname(os.path.abspath(__file__))
+    
+    app_dir_rel_path = get_rel_path_from_compare(this_file_abs_path, start_dir)
+    print('this_file_abs_path: ', this_file_abs_path)
+    
+     
+    paths_to_copy_l = get_dir_content_l(start_dir, 'all', 'abs_path')
+     
 #     paths_to_copy_trimmed_l = path_l_remove(paths_to_copy_l, [], removal_mode)
     
-
 
 
 
