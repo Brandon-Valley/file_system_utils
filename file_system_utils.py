@@ -153,8 +153,11 @@ def get_dir_content_l(in_dir_path, object_type = 'all', content_type = 'abs_path
             elif object_type in ('all', 'dir')  and is_dir (abs_obj_path):
                 content_l.append(header + object_name)
                 
-                if recurs_dirs:
-                    content_l += get_dir_content_l(abs_obj_path, object_type, content_type, recurs_dirs, rel_to_path)
+#                 if recurs_dirs:
+#                     content_l += get_dir_content_l(abs_obj_path, object_type, content_type, recurs_dirs, rel_to_path)
+
+        if recurs_dirs and is_dir(abs_in_dir_path + '//' + object_name):
+            content_l += get_dir_content_l(abs_obj_path, object_type, content_type, recurs_dirs, rel_to_path)
                     
                 
     # make final container if needed
