@@ -368,9 +368,25 @@ def replace_extension(in_file_path, new_extension):
     return new_path
         
         
-''' returns T/F if 2 paths point to same place '''
-def paths_equal(path_1, path_2):
-    return os.path.abspath(path_1) == os.path.abspath(path_2)
+
+def paths_equal(path_1_str_or_l, path_2_str_or_l):
+    ''' If given 2 paths (strings):  returns T/F if 2 paths point to same place 
+        If either/both param is list, returns T/F if any 2 paths in both lists point to same place'''
+    
+    if isinstance(path_1_str_or_l, str) and isinstance(path_2_str_or_l, str):
+        return os.path.abspath(path_1_str_or_l) == os.path.abspath(path_2_str_or_l)
+    else:
+        # make sure both params are lists
+        if isinstance(path_1_str_or_l, str):
+            path_1_str_or_l = [path_1_str_or_l]
+        
+        if isinstance(path_2_str_or_l, str):
+            path_2_str_or_l = [path_2_str_or_l]
+                            
+    print(path_1_str_or_l, path_2_str_or_l)
+        
+
+
 
 def get_abs_path_from_rel_path(in_rel_path):
     return os.path.abspath(in_rel_path)
@@ -425,9 +441,17 @@ def path_l_remove(path_l, to_remove_str_or_l, removal_mode = 'basename_equals'):
     def path_l_remove__basename_equals():
         return [path for path in path_l if not get_basename_from_path(path) in to_remove_str_or_l]
 
+    def path_l_remove__paths_equal():
+        ret_path_l = []
+        
+        for path in path_l:
+            pass
+
 
     if removal_mode == 'basename_equals':
         return path_l_remove__basename_equals()
+    elif removal_mode == 'paths_equal':
+        return path_l_remove__paths_equal()
     else:
         raise Exception('ERROR:  NOT IMPLEMENTED')
     
@@ -472,15 +496,20 @@ def path_l_to_path_basename_ntl(path_l):
 if __name__ == '__main__':    
     print('In Main:  file_system_utils')
     
-    
-    in_dir_path = 'C:\\repos\\converted_pic_repos__TESTING_501 - Copy\\PIC213'
-#     l = get_dir_content_l(in_dir_path, object_type = 'all', content_type = 'abs_path', recurs_dirs = True)
-    l = get_dir_content_l(in_dir_path, object_type = 'all', content_type = 'abs_path_basename_nt', recurs_dirs = True)
+    p1 = 'C:\\projects\\version_control_scripts\\CE'
+    p2 = ['C:\\projects\\version_control_scripts\\CE']
+    paths_equal(p1, p2)
 
-#     print(l)
-# 
-    for n in l:
-        print(n)
+
+
+#     app_dir_rel_path = 'app'
+#     start_dir = "C:\\projects\\version_control_scripts\\CE"
+#     
+#     paths_to_copy_l = get_dir_content_l(start_dir, 'all', 'abs_path')
+#     
+#     paths_to_copy_trimmed_l = path_l_remove(paths_to_copy_l, [], removal_mode)
+    
+
 
 #     print(path_l_to_path_basename_ntl(l[2]))
     
