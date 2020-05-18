@@ -268,7 +268,7 @@ def copy_objects_to_dest(path_l_or_str, dest_parent_dir_path, copy_dir_content =
             path_basename = get_basename_from_path(path)
             dest_dir_path = dest_parent_dir_path + '//' + path_basename
             delete_if_exists(dest_dir_path)
-                        
+                                             
             if copy_dir_content:
                 shutil.copytree(path, dest_dir_path)
             else:
@@ -453,8 +453,11 @@ def get_rel_path_from_compare(child_path, parent_path):
 def get_abs_path_from_rel_path(in_rel_path):
     return os.path.abspath(in_rel_path)
     
-def get_basename_from_path(path):
-    return ntpath.basename(path)
+def get_basename_from_path(path, include_ext = True):
+    if include_ext:
+        return ntpath.basename(path)
+    else:
+        return os.path.splitext(ntpath.basename(path))[0]
 
 def get_parent_dir_path_from_path(path):
     return os.path.dirname(path)
