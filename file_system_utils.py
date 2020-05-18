@@ -497,23 +497,16 @@ def path_l_remove(path_l, to_remove_str_or_l, removal_mode = 'basename_equals'):
     
     def path_l_remove__basename_equals():
         return [path for path in path_l if not get_basename_from_path(path) in to_remove_str_or_l]
-
-#     def path_l_remove__paths_equal():
-#         return [path for path in path_l if not paths_compare(path, to_remove_str_or_l, compare_mode = 'equals')]
-#     
-#     def path_l_remove__starts_with():
-#         return [path for path in path_l if not paths_compare(path, to_remove_str_or_l, compare_mode = 'starts_with')]
     
     def path_l_remove__if_not_paths_compare():
         return [path for path in path_l if not paths_compare(path, to_remove_str_or_l, compare_mode = removal_mode)]
 
     if removal_mode == 'basename_equals':
         return path_l_remove__basename_equals()
+    
     elif removal_mode in ['paths_equal', 'starts_with', 'is_component_name']:
-        return path_l_remove__if_not_paths_compare()
-#         return path_l_remove__paths_equal()
-#     elif removal_mode == 'starts_with':
-#         return path_l_remove__starts_with()    
+        return path_l_remove__if_not_paths_compare()   
+    
     else:
         raise Exception('ERROR:  NOT IMPLEMENTED')
     
