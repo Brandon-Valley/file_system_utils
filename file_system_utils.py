@@ -252,7 +252,11 @@ def rename_file_overwrite(src_file_path, dest_file_path):
 
 
 ''' can take a single str path for path_l '''
-def copy_objects_to_dest(path_l_or_str, dest_parent_dir_path):
+def copy_objects_to_dest(path_l_or_str, dest_parent_dir_path, copy_dir_content = True):
+    
+    def ig_f(dir, files):
+        return [f for f in files if os.path.isfile(os.path.join(dir, f))]
+    
     if isinstance(path_l_or_str, str):
         path_l_or_str = [path_l_or_str]
 
@@ -264,7 +268,12 @@ def copy_objects_to_dest(path_l_or_str, dest_parent_dir_path):
             path_basename = get_basename_from_path(path)
             dest_dir_path = dest_parent_dir_path + '//' + path_basename
             delete_if_exists(dest_dir_path)
-            shutil.copytree(path, dest_dir_path)
+                        
+            if copy_dir_content:
+                shutil.copytree(path, dest_dir_path)
+            else:
+                shutil.copytree(path, dest_dir_path, ignore=ig_f)
+
             
         elif os.path.isfile(path):
             shutil.copy(path, dest_parent_dir_path)
