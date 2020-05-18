@@ -376,23 +376,48 @@ def replace_extension(in_file_path, new_extension):
         
 
 def paths_equal(path_1_str_or_l, path_2_str_or_l):
-    ''' If given 2 paths (strings):  returns T/F if 2 paths point to same place 
-        If either/both param is list, returns T/F if any 2 paths in both lists point to same place'''
-    
-    if isinstance(path_1_str_or_l, str) and isinstance(path_2_str_or_l, str):
-        return os.path.abspath(path_1_str_or_l) == os.path.abspath(path_2_str_or_l)
-    else:
-        # make sure both params are lists
-        if isinstance(path_1_str_or_l, str):
-            path_1_str_or_l = [path_1_str_or_l]
+    ''' Depreciated, use paths_compare()'''
+    return paths_compare(path_1_str_or_l, path_2_str_or_l, compare_mode = 'equal')
         
-        if isinstance(path_2_str_or_l, str):
-            path_2_str_or_l = [path_2_str_or_l]
-                            
-        for path_1 in path_1_str_or_l:
-            for path_2 in path_2_str_or_l:
-                if paths_equal(path_1, path_2):
+
+def paths_compare(path_1_str_or_l, path_2_str_or_l, compare_mode = 'equal'):
+    ''' 
+        Returns true if compare mode is true for any 2 combinations of paths
+        
+        Compare Modes:
+            
+            equal:
+                True if 2 paths point to the same place - rel / abs
+                
+            starts_with:
+                True if any path 1 starts with any path 2
+    '''
+    
+    # make sure both params are lists
+    if isinstance(path_1_str_or_l, str):
+        path_1_str_or_l = [path_1_str_or_l]
+    
+    if isinstance(path_2_str_or_l, str):
+        path_2_str_or_l = [path_2_str_or_l]
+                        
+    for path_1 in path_1_str_or_l:
+        for path_2 in path_2_str_or_l:
+            
+            abs_path_1 = os.path.abspath(path_1)
+            abs_path_2 = os.path.abspath(path_2)
+#             print('comparing: ', abs_path_1, abs_path_2)#``````````````````````````````````````````````````````````````````````````````````
+            
+            if   compare_mode == 'equal':
+                if abs_path_1 == abs_path_2:     
                     return True
+                
+            elif compare_mode == 'starts_with':
+                if abs_path_1.startswith(abs_path_2):
+                    return True
+                    
+            else:
+                raise Exception('NOT IMPLEMENTED: compare_mode:' + compare_mode) 
+
         return False
         
 
@@ -444,7 +469,7 @@ def path_l_to_basename_l(path_l):
 def path_l_remove(path_l, to_remove_str_or_l, removal_mode = 'basename_equals'):
     eu.error_if_param_type_not_in_whitelist(path_l,             ['list', 'tuple'])
     eu.error_if_param_type_not_in_whitelist(to_remove_str_or_l, ['list', 'tuple', 'str'])    
-    eu.error_if_param_key_not_in_whitelist(removal_mode, ['basename_equals', 'in_basename', 'paths_equal', 'in_path'])
+    eu.error_if_param_key_not_in_whitelist(removal_mode, ['basename_equals', 'in_basename', 'paths_equal', 'in_path', 'starts_with'])
     
     if isinstance(to_remove_str_or_l, str):
         to_remove_str_or_l = [to_remove_str_or_l]
@@ -453,13 +478,18 @@ def path_l_remove(path_l, to_remove_str_or_l, removal_mode = 'basename_equals'):
         return [path for path in path_l if not get_basename_from_path(path) in to_remove_str_or_l]
 
     def path_l_remove__paths_equal():
-        return [path for path in path_l if not paths_equal(path, to_remove_str_or_l)]
+        return [path for path in path_l if not paths_compare(path, to_remove_str_or_l, compare_mode = 'equals')]
+    
+    def path_l_remove__starts_with():
+        return [path for path in path_l if not paths_compare(path, to_remove_str_or_l, compare_mode = 'starts_with')]
 
 
     if removal_mode == 'basename_equals':
         return path_l_remove__basename_equals()
     elif removal_mode == 'paths_equal':
         return path_l_remove__paths_equal()
+    elif removal_mode == 'starts_with':
+        return path_l_remove__starts_with()    
     else:
         raise Exception('ERROR:  NOT IMPLEMENTED')
     
@@ -476,7 +506,7 @@ def path_l_to_path_basename_ntl(path_l):
     path_basename_ntl = []
     
     for path in path_l:
-        print(path)#``````````````````````````````````````````````````````````
+#         print(path)#``````````````````````````````````````````````````````````
         basename = get_basename_from_path(path)
         path_basename_ntl.append(Path_basename_nt(path, basename))
         
@@ -505,9 +535,13 @@ if __name__ == '__main__':
     print('In Main:  file_system_utils')
     
     p1 = 'C:\\Users\\mt204e\\Documents\\other\\test_dir'
-    p3 = 'C:\\Users\\mt204e\\Documents\\other'
+    p3 = ['C:\\Users\\mt204e\\Documents\\other', 'C:\\Users\\mt204e\\Documents\\other\\test_dir']
     
-    print(get_dir_content_l(p1, object_type = 'all', content_type = 'rel_path', recurs_dirs = True, rel_to_path=p3))
+#     print(get_dir_content_l(p1, object_type = 'all', content_type = 'rel_path', recurs_dirs = True, rel_to_path=p3))
+
+    print(paths_compare(p1, p3, compare_mode = 'starts_with'))
+    print(paths_compare(p3, p1, compare_mode = 'starts_with'))
+
     
 #     p2 = ['C:\\projects\\version_control_scripts', 'C:\\projects\\version_control_scripts\\CE']
 #     print(paths_equal(p1, p2))
