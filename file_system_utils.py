@@ -90,7 +90,7 @@ def get_newest_file_path(dir_path):
 
 
 '''returns list - should update get_dir_content_l() instead of using this'''
-def get_relative_path_of_files_in_dir(dir_path, file_type):
+def get_relative_path_of_files_in_dir(dir_path, file_type = None):
     # Getting the current work directory (cwd)
     thisdir = os.getcwd()
     
@@ -98,7 +98,7 @@ def get_relative_path_of_files_in_dir(dir_path, file_type):
     # r=root, d=directories, f = files
     for r, d, f in os.walk(dir_path):
         for file in f:
-            if file_type in file:
+            if file_type == None or file_type in file:
 #                 print(os.path.join(r, file))
                 path_list.append(os.path.join(r, file))
     return path_list
@@ -106,14 +106,15 @@ def get_relative_path_of_files_in_dir(dir_path, file_type):
 
 
 ''' in_dir_path - can be either abs or relative path '''
-def get_dir_content_l(in_dir_path, object_type = 'all', content_type = 'abs_path', recurs_dirs = False):
+def get_dir_content_l(in_dir_path, object_type = 'all', content_type = 'abs_path', recurs_dirs = False, rel_to_path = None):
     if is_dir(in_dir_path) != True and in_dir_path != '':
         raise Exception("ERROR:  in_dir_path must point to dir")
     if object_type not in ['all', 'dir', 'file']:
         raise Exception("ERROR:  Invalid object_type: ", object_type, "  object_type must be one of:  ['all', 'dir', 'file']")
     if content_type not in ['abs_path', 'rel_path', 'name', 'abs_path_basename_nt', 'rel_path_basename_nt']:
         raise Exception("ERROR:  Invalid content_type: ", content_type, "  object_type must be one of:  ['abs_path', 'rel_path', 'name', 'abs_path_basename_nt', 'rel_path_basename_nt']")
-    
+    if content_type == 'rel_path' and rel_to_path == None:
+        raise Exception("ERROR:  Invalid param combo: content_type == 'rel_path' and rel_to_path == None")
 
     # change content_type if needed for recursion
     og_content_type = content_type
@@ -125,6 +126,7 @@ def get_dir_content_l(in_dir_path, object_type = 'all', content_type = 'abs_path
     
     abs_in_dir_path = get_abs_path_from_rel_path(in_dir_path)
     object_name_l = os.listdir(abs_in_dir_path) # list of names of all dirs and files in dir
+    print('object_name_l: ', object_name_l)#``````````````````````````````````````````````````````````````````````````````````````````````````````````````````
     
     if content_type == 'name' and object_type == 'all':
         return object_name_l
@@ -134,7 +136,8 @@ def get_dir_content_l(in_dir_path, object_type = 'all', content_type = 'abs_path
     if   content_type == 'abs_path':
         header = abs_in_dir_path + '//' 
     elif content_type == 'rel_path':
-        raise Exception('ERROR: rel_path option not yet implemented') # look at get_relative_path_of_files_in_dir(dir_path, file_type)
+#         raise Exception('ERROR: rel_path option not yet implemented') # look at get_relative_path_of_files_in_dir(dir_path, file_type)
+        header = get_rel_path_from_compare(in_dir_path, rel_to_path) + '//' 
     
     content_l = []
     
@@ -151,7 +154,7 @@ def get_dir_content_l(in_dir_path, object_type = 'all', content_type = 'abs_path
                 content_l.append(header + object_name)
                 
                 if recurs_dirs:
-                    content_l += get_dir_content_l(abs_obj_path, object_type, content_type, recurs_dirs)
+                    content_l += get_dir_content_l(abs_obj_path, object_type, content_type, recurs_dirs, rel_to_path)
                     
                 
     # make final container if needed
@@ -498,20 +501,24 @@ def path_l_to_path_basename_ntl(path_l):
 if __name__ == '__main__':    
     print('In Main:  file_system_utils')
     
-#     p1 = 'C:\\projects\\version_control_scripts\\CE'
+    p1 = 'C:\\Users\\mt204e\\Documents\\other\\test_dir'
+    p3 = 'C:\\Users\\mt204e\\Documents\\other'
+    
+    print(get_dir_content_l(p1, object_type = 'all', content_type = 'rel_path', recurs_dirs = True, rel_to_path=p3))
+    
 #     p2 = ['C:\\projects\\version_control_scripts', 'C:\\projects\\version_control_scripts\\CE']
 #     print(paths_equal(p1, p2))
 # 
 #     print(path_l_remove(p2, p1, removal_mode = 'paths_equal'))
 
-    start_dir = "C:\\projects\\version_control_scripts\\CE"
-    this_file_abs_path = os.path.dirname(os.path.abspath(__file__))
-    
-    app_dir_rel_path = get_rel_path_from_compare(this_file_abs_path, start_dir)
-    print('this_file_abs_path: ', this_file_abs_path)
-    
-     
-    paths_to_copy_l = get_dir_content_l(start_dir, 'all', 'abs_path')
+#     start_dir = "C:\\projects\\version_control_scripts\\CE"
+#     this_file_abs_path = os.path.dirname(os.path.abspath(__file__))
+#     
+#     app_dir_rel_path = get_rel_path_from_compare(this_file_abs_path, start_dir)
+#     print('this_file_abs_path: ', this_file_abs_path)
+#     
+#      
+#     paths_to_copy_l = get_dir_content_l(start_dir, 'all', 'abs_path')
      
 #     paths_to_copy_trimmed_l = path_l_remove(paths_to_copy_l, [], removal_mode)
     
