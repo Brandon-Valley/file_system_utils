@@ -383,7 +383,11 @@ def paths_equal(path_1_str_or_l, path_2_str_or_l):
         if isinstance(path_2_str_or_l, str):
             path_2_str_or_l = [path_2_str_or_l]
                             
-    print(path_1_str_or_l, path_2_str_or_l)
+        for path_1 in path_1_str_or_l:
+            for path_2 in path_2_str_or_l:
+                if paths_equal(path_1, path_2):
+                    return True
+        return False
         
 
 
@@ -497,8 +501,8 @@ if __name__ == '__main__':
     print('In Main:  file_system_utils')
     
     p1 = 'C:\\projects\\version_control_scripts\\CE'
-    p2 = ['C:\\projects\\version_control_scripts\\CE']
-    paths_equal(p1, p2)
+    p2 = ['C:\\projects\\version_control_scripts', 'C:\\projects\\version_control_scripts\\C']
+    print(paths_equal(p1, p2))
 
 
 
