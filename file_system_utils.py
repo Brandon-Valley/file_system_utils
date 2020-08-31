@@ -248,7 +248,11 @@ def delete_if_exists(path_str_or_l):
 def rename_file_overwrite(src_file_path, dest_file_path):
     if not paths_equal(src_file_path, dest_file_path):        
         delete_if_exists(dest_file_path)
-        os.rename(src_file_path, dest_file_path)
+        try:
+            os.rename(src_file_path, dest_file_path)
+        except OSError:
+            delete_if_exists(dest_file_path)
+            shutil.move(src_file_path, dest_file_path)
 
 
 ''' can take a single str path for path_l '''
