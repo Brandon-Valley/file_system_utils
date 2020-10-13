@@ -108,7 +108,7 @@ def get_relative_path_of_files_in_dir(dir_path, file_type = None):
 ''' in_dir_path - can be either abs or relative path '''
 def get_dir_content_l(in_dir_path, object_type = 'all', content_type = 'abs_path', recurs_dirs = False, rel_to_path = None):
     if is_dir(in_dir_path) != True and in_dir_path != '':
-        raise Exception("ERROR:  in_dir_path must point to dir")
+        raise Exception("ERROR:  in_dir_path must point to dir, in_dir_path: " + in_dir_path)
     if object_type not in ['all', 'dir', 'file']:
         raise Exception("ERROR:  Invalid object_type: ", object_type, "  object_type must be one of:  ['all', 'dir', 'file']")
     if content_type not in ['abs_path', 'rel_path', 'name', 'abs_path_basename_nt', 'rel_path_basename_nt']:
