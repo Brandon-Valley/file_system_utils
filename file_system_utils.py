@@ -271,6 +271,7 @@ def copy_objects_to_dest(path_l_or_str, dest_parent_dir_path, copy_dir_content =
     make_dir_if_not_exist(dest_parent_dir_path)
     
     for path in path_l_or_str:
+        eu.error_if_not_is_file_or_is_dir(path)
         
         if  os.path.isdir(path):
             path_basename = get_basename_from_path(path)
@@ -593,9 +594,11 @@ if __name__ == '__main__':
                                      "C:\\Users\\mt204e\\Documents\\test\\__test_diiir", 
                                      'renamed.txt', copy_dir_content = True)
 
-    copy_object_to_dest_then_rename("C:\\Users\\mt204e\\Documents\\test\\___test_dirrr",
+    copy_object_to_dest_then_rename("C:\\Users\\mt204e\\Documents\\test\\__test_diiirwwwwwwwww",
                                      "C:\\Users\\mt204e\\Documents\\test\\_____teeeeeest", 
-                                     'renamed.txt', copy_dir_content = True)
+                                     'renamed_diiiiiiir', copy_dir_content = True)
+    
+#     copy_object_to_dest_then_rename(path_str, dest_parent_dir_path, new_object_name, copy_dir_content)
     
 #     print(get_dir_content_l(p1, object_type = 'all', content_type = 'rel_path', recurs_dirs = True, rel_to_path=p3))
 
