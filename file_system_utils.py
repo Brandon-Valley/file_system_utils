@@ -244,19 +244,23 @@ def delete_if_exists(path_str_or_l):
         delete_single_fs_obj_fast(path)
 
 
-''' will do nothing if src_file_path == dest_file_path '''
-def rename_file_overwrite(src_file_path, dest_file_path):
-    if not paths_equal(src_file_path, dest_file_path):        
-        delete_if_exists(dest_file_path)
+''' Works with dir also
+    will do nothing if src_file_path == dest_file_path '''
+def rename_file_overwrite(src_object_path, dest_object_path):
+    if not paths_equal(src_object_path, dest_object_path):        
+        delete_if_exists(dest_object_path)
         try:
-            os.rename(src_file_path, dest_file_path)
+            os.rename(src_object_path, dest_object_path)
         except OSError:
-            delete_if_exists(dest_file_path)
-            shutil.move(src_file_path, dest_file_path)
+            delete_if_exists(dest_object_path)
+            shutil.move(src_object_path, dest_object_path)          
 
 
 ''' can take a single str path for path_l '''
 def copy_objects_to_dest(path_l_or_str, dest_parent_dir_path, copy_dir_content = True):
+    eu.error_if_param_type_not_in_whitelist(path_l_or_str       , ['str', 'list'])
+    eu.error_if_param_type_not_in_whitelist(dest_parent_dir_path, ['str'])
+    eu.error_if_param_type_not_in_whitelist(copy_dir_content    , ['bool'])
     
     def ig_f(dir, files):
         return [f for f in files if os.path.isfile(os.path.join(dir, f))]
@@ -281,6 +285,21 @@ def copy_objects_to_dest(path_l_or_str, dest_parent_dir_path, copy_dir_content =
             
         elif os.path.isfile(path):
             shutil.copy(path, dest_parent_dir_path)
+    
+
+def copy_object_to_dest_then_rename(path_str, dest_parent_dir_path, new_object_name, copy_dir_content = True):
+    eu.error_if_param_type_not_in_whitelist(path_str       , ['str']) # only 1 at a time
+    eu.error_if_param_type_not_in_whitelist(new_object_name, ['str'])
+    
+    copy_objects_to_dest(path_str, dest_parent_dir_path, copy_dir_content)
+    
+    basename = get_basename_from_path(path_str, include_ext = True)
+    
+    og_dest_obj_path = os.path.join(dest_parent_dir_path, basename)
+    new_dest_obj_path = os.path.join(dest_parent_dir_path, new_object_name)
+    
+    rename_file_overwrite(og_dest_obj_path, new_dest_obj_path)
+    
     
 
         
@@ -567,17 +586,29 @@ def path_l_to_path_basename_ntl(path_l):
 if __name__ == '__main__':    
     print('In Main:  file_system_utils')
     
-    p1 = 'C:\\Users\\mt204e\\Documents\\other\\test_dir'
-    p3 = ['C:\\Users\\mt204e\\Documents\\other3', 'C:\\Users\\mt204e\\Documents\\other\\test_dir']
+#     p1 = 'C:\\Users\\mt204e\\Documents\\other\\test_dir'
+#     p3 = ['C:\\Users\\mt204e\\Documents\\other3', 'C:\\Users\\mt204e\\Documents\\other\\test_dir']
+
+    copy_object_to_dest_then_rename("C:\\Users\\mt204e\\Documents\\test\\t.txt",
+                                     "C:\\Users\\mt204e\\Documents\\test\\__test_diiir", 
+                                     'renamed.txt', copy_dir_content = True)
+
+    copy_object_to_dest_then_rename("C:\\Users\\mt204e\\Documents\\test\\___test_dirrr",
+                                     "C:\\Users\\mt204e\\Documents\\test\\_____teeeeeest", 
+                                     'renamed.txt', copy_dir_content = True)
     
 #     print(get_dir_content_l(p1, object_type = 'all', content_type = 'rel_path', recurs_dirs = True, rel_to_path=p3))
 
 #     print(paths_compare(p1, p3, compare_mode = 'starts_with'))
 #     print(paths_compare(p3, p1, compare_mode = 'starts_with'))
-
-    print(paths_compare(p3, 'other', compare_mode = 'is_component_name'))
-    print(path_l_remove(path_l = p3, to_remove_str_or_l = 'other', removal_mode = 'is_component_name'))
-    print(path_l_remove(path_l = p3, to_remove_str_or_l = 'wwaaaaaaaaaaaaaa', removal_mode = 'paths_equal'))
+# 
+#     print(paths_compare(p3, 'other', compare_mode = 'is_component_name'))
+#     print(path_l_remove(path_l = p3, to_remove_str_or_l = 'other', removal_mode = 'is_component_name'))
+#     print(path_l_remove(path_l = p3, to_remove_str_or_l = 'wwaaaaaaaaaaaaaa', removal_mode = 'paths_equal'))
+# 
+#     print(paths_compare(p3, 'other', compare_mode = 'is_component_name'))
+#     print(path_l_remove(path_l = p3, to_remove_str_or_l = 'other', removal_mode = 'is_component_name'))
+#     print(path_l_remove(path_l = p3, to_remove_str_or_l = 'wwaaaaaaaaaaaaaa', removal_mode = 'paths_equal'))
 
     
 #     p2 = ['C:\\projects\\version_control_scripts', 'C:\\projects\\version_control_scripts\\CE']
