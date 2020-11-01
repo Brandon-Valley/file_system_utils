@@ -258,6 +258,7 @@ def rename_file_overwrite(src_object_path, dest_object_path):
              
             
 def rename_dir_contents(dir_path, replace_d, object_type = 'all', recurs_dirs = False):
+    ''' Only renames basenames '''
     
     eu.error_if_param_type_not_in_whitelist(dir_path   , ['str'])
     eu.error_if_not_is_dir                 (dir_path)
@@ -266,26 +267,14 @@ def rename_dir_contents(dir_path, replace_d, object_type = 'all', recurs_dirs = 
     eu.error_if_param_key_not_in_whitelist (object_type, ['all', 'file', 'dir'])
     eu.error_if_param_type_not_in_whitelist(recurs_dirs, ['bool'])
     
-    #  
-#     dir_abs_path_l  = []
-#     file_abs_path_l = []
-#     if object_type in ['all', 'dir']:
-#         dir_abs_path_l  = get_dir_content_l(dir_path, object_type, content_type = 'abs_path', recurs_dirs)
-#     if object_type in ['all', 'file']:
-#         file_abs_path_l = get_dir_content_l(dir_path, object_type, content_type = 'abs_path', recurs_dirs)
    
     raw_dir_content_abs_path_l = get_dir_content_l(dir_path, object_type, 'abs_path', recurs_dirs)
-    
-    print(raw_dir_content_abs_path_l)
-    
+        
     # must sort list by length so you don't rename a dir above another object
-    sorted_dir_content_abs_path_l = sorted(raw_dir_content_abs_path_l, key=len)
-    
-    print(sorted_dir_content_abs_path_l)
-    
+    sorted_dir_content_abs_path_l = sorted(raw_dir_content_abs_path_l, key=len, reverse = True)
+        
     sorted_dir_content_abs_path_path_basename_ntl = path_l_to_path_basename_ntl(sorted_dir_content_abs_path_l)
     
-    print(sorted_dir_content_abs_path_path_basename_ntl)
     
     for sorted_dir_content_abs_path_path_basename_nt in sorted_dir_content_abs_path_path_basename_ntl:
         new_basename = sorted_dir_content_abs_path_path_basename_nt.basename
@@ -297,35 +286,8 @@ def rename_dir_contents(dir_path, replace_d, object_type = 'all', recurs_dirs = 
         if new_basename != sorted_dir_content_abs_path_path_basename_nt.basename:
             parent_dir_path = os.path.dirname(sorted_dir_content_abs_path_path_basename_nt.path)
             new_path = os.path.join(parent_dir_path, new_basename)
-            print(new_path)
             rename_file_overwrite(sorted_dir_content_abs_path_path_basename_nt.path, new_path)
-     
-     
-    
-    
-    
-    
-    
-    
-#     
-#     def replace_in_filenames_in_dir(dir_path, find_str, replace_str):
-#     file_path_l = fsu.get_dir_content_l(dir_path, object_type = 'file', content_type = 'abs_path', recurs_dirs = True)
-#     
-#     for file_path in file_path_l:
-#         og_file_name = os.path.basename(file_path)
-#         
-#         replaced_file_name = og_file_name.replace(find_str, replace_str)
-#         
-# #         print('replaced_file_name: ', replaced_file_name, og_file_name)
-#         
-#         
-#         if og_file_name == replaced_file_name:
-#             print(find_str, 'not found in ', og_file_name, ' from ', dir_path)
-#         else:
-#             replaced_file_path = file_path.replace(og_file_name, replaced_file_name)
-#             print(replaced_file_path)
-#             
-#             fsu.rename_file_overwrite(file_path, replaced_file_path)            
+         
 
 
 ''' can take a single str path for path_l '''
@@ -516,14 +478,6 @@ def paths_compare(path_1_str_or_l, path_2_str_or_l, compare_mode = 'equal'):
             abs_path_1 = os.path.abspath(path_1)
             abs_path_2 = os.path.abspath(path_2)
             
-#             #`````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````
-#             print('comparing: ')
-#             print('    path_1_str_or_l: ', path_1_str_or_l)
-#             print('    path_2_str_or_l: ', path_2_str_or_l)
-#             print('    path_1: ', path_1)
-#             print('    path_2: ', path_2)
-#             print('    abs_path_1: ', abs_path_1)
-#             print('    abs_path_2: ', abs_path_2)
             
             if   compare_mode == 'paths_equal':
                 if abs_path_1 == abs_path_2:     
@@ -670,7 +624,7 @@ if __name__ == '__main__':
 #                                      "C:\\Users\\mt204e\\Documents\\test\\_____teeeeeest", 
 #                                      'renamed_diiiiiiir', copy_dir_content = True)
     
-    dir_path = 'C:\\vuze_downloads\\completed\\test'
+    dir_path = "C:\\vuze_downloads\\completed\\test - Copy"
     replace_d = {' [Unknown]' : '',
                  ' - 1080p'   : '[1080p]'}
     rename_dir_contents(dir_path, replace_d, object_type = 'all', recurs_dirs = True)
