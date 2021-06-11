@@ -322,7 +322,31 @@ def copy_objects_to_dest(path_l_or_str, dest_parent_dir_path, copy_dir_content =
             shutil.copy(path, dest_parent_dir_path)
     
 
+def copy_object_to_path(src_path_str, dest_path_str, copy_dir_content = True):
+    """
+    Copies the file or dir at src_path_str to dest_path_str
+    """
+    eu.error_if_param_type_not_in_whitelist(src_path_str    , ['str']) # only 1 at a time
+    eu.error_if_param_type_not_in_whitelist(dest_path_str   , ['str'])
+    eu.error_if_param_type_not_in_whitelist(copy_dir_content, ['bool'])
+    eu.error_if_not_is_file_or_is_dir      (src_path_str)
+
+    if os.path.isfile(src_path_str):
+        shutil.copy(src_path_str, dest_path_str)
+    elif os.path.isdir(src_path_str):
+        raise Exception("ERROR: NOT YET IMPLEMENTED")
+#         shutil.copy(src_path_str, dest_path_str) # does not work, perm error
+    else:
+        raise Exception("ERROR: How did you even get here?")
+    
+    
+    
+    
 def copy_object_to_dest_then_rename(path_str, dest_parent_dir_path, new_object_name, copy_dir_content = True):
+    """
+    Deprecated: Do Not Touch!  Just use copy_object_to_path instead
+    """
+    
     eu.error_if_param_type_not_in_whitelist(path_str       , ['str']) # only 1 at a time
     eu.error_if_param_type_not_in_whitelist(new_object_name, ['str'])
     
@@ -612,6 +636,18 @@ def path_l_to_path_basename_ntl(path_l):
 
 if __name__ == '__main__':    
     print('In Main:  file_system_utils')
+#     
+#     src_path_str = "C:\\projects\\deprecate_doc\\src\\o_2.docx"
+#     dest_path_str = "C:\\projects\\deprecate_doc\\src\\CUR_VER_TEST_o_2.docx"
+#     copy_dir_content = True
+#     
+#     copy_object_to_path(src_path_str, dest_path_str, copy_dir_content)
+    
+    src_path_str = "C:\\Users\\mt204e\\Documents\\temp\\t"
+    dest_path_str = "C:\\Users\\mt204e\\Documents\\temp\\t_CUR_VER"
+    copy_dir_content = True
+    
+    copy_object_to_path(src_path_str, dest_path_str, copy_dir_content)
     
 #     p1 = 'C:\\Users\\mt204e\\Documents\\other\\test_dir'
 #     p3 = ['C:\\Users\\mt204e\\Documents\\other3', 'C:\\Users\\mt204e\\Documents\\other\\test_dir']
@@ -624,10 +660,10 @@ if __name__ == '__main__':
 #                                      "C:\\Users\\mt204e\\Documents\\test\\_____teeeeeest", 
 #                                      'renamed_diiiiiiir', copy_dir_content = True)
     
-    dir_path = "C:\\vuze_downloads\\completed\\test - Copy"
-    replace_d = {' [Unknown]' : '',
-                 ' - 1080p'   : '[1080p]'}
-    rename_dir_contents(dir_path, replace_d, object_type = 'all', recurs_dirs = True)
+#     dir_path = "C:\\vuze_downloads\\completed\\test - Copy"
+#     replace_d = {' [Unknown]' : '',
+#                  ' - 1080p'   : '[1080p]'}
+#     rename_dir_contents(dir_path, replace_d, object_type = 'all', recurs_dirs = True)
 #     copy_object_to_dest_then_rename(path_str, dest_parent_dir_path, new_object_name, copy_dir_content)
     
 #     print(get_dir_content_l(p1, object_type = 'all', content_type = 'rel_path', recurs_dirs = True, rel_to_path=p3))
