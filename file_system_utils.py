@@ -237,7 +237,7 @@ def delete_fs_obj_l_fast(path_l):
         
 # works for single path str or list of paths
 def delete_if_exists(path_str_or_l):
-    if isinstance(path_str_or_l, str):
+    if not isinstance(path_str_or_l, list):
         path_str_or_l = [path_str_or_l]
     
     for path in path_str_or_l:
