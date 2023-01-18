@@ -617,7 +617,7 @@ def path_l_to_path_basename_ntl(path_l):
     return path_basename_ntl
 
 
-def get_file_path_l_w_duplicate_files_removed(file_path_l, verbose = False):
+def get_file_path_l_w_duplicate_files_removed(file_path_l, return_removed_file_path_l = False, verbose = False):
     """ If 2 files are binary same, will keep whichever file appears first in file_path_l
         - Returns list of unique files in same relative order as file_path_l
         - file_path_l must be type 'list'
@@ -629,6 +629,7 @@ def get_file_path_l_w_duplicate_files_removed(file_path_l, verbose = False):
         return file_path_l
 
     unique_file_path_l = [file_path_l[0]]
+    removed_file_path_l = []
 
     for file_path in file_path_l[1:]:
         file_is_unique = True
@@ -638,10 +639,13 @@ def get_file_path_l_w_duplicate_files_removed(file_path_l, verbose = False):
                 if verbose:
                     print(f"Found Duplicate File: F1:{file_path} == F2{unique_file_path}, Removing F1...")
                 file_is_unique = False
+                removed_file_path_l.append(file_path)
                 break
         if file_is_unique:
             unique_file_path_l.append(file_path)
 
+    if return_removed_file_path_l:
+        return unique_file_path_l, removed_file_path_l
     return unique_file_path_l
 
 
