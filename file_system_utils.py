@@ -1,5 +1,7 @@
+import filecmp
 import glob
 import os
+from pprint import pprint
 import shutil
 import ntpath
 from collections import namedtuple
@@ -614,6 +616,34 @@ def path_l_to_path_basename_ntl(path_l):
         path_basename_ntl.append(Path_basename_nt(path, basename))
         
     return path_basename_ntl
+
+
+def get_file_path_l_w_duplicate_files_removed(file_path_l, verbose = False):
+    """ If 2 files are binary same, will keep whichever file appears first in file_path_l 
+        - Returns list of unique files in same relative order as file_path_l
+        - file_path_l must be type 'list'
+        - If len(file_path_l) < 2, just returns file_path_l
+    """
+    if not isinstance(file_path_l, list):
+        raise TypeError(f"file_path_l must be of type list, not {type(file_path_l)}")
+    if len(file_path_l) < 2:
+        return file_path_l
+
+    unique_file_path_l = [file_path_l[0]]
+
+    for file_path in file_path_l[1:]:
+        file_is_unique = True
+
+        for unique_file_path in unique_file_path_l:
+            if filecmp.cmp(file_path, unique_file_path):
+                if verbose:
+                    print(f"Found Duplicate File: F1:{file_path} == F2{unique_file_path}, Removing F1...")
+                file_is_unique = False
+                break
+        if file_is_unique:
+            unique_file_path_l.append(file_path)
+
+    return unique_file_path_l
     
         
     
@@ -636,6 +666,12 @@ def path_l_to_path_basename_ntl(path_l):
 
 if __name__ == '__main__':    
     print('In Main:  file_system_utils')
+    file_path_l = get_dir_content_l("C:/Users/Brandon/Documents/Other/temp/Family_Guy__Star_Trek__Clip____TBS", "file")
+    new_l = get_file_path_l_w_duplicate_files_removed(file_path_l, True)
+    print(f"{len(file_path_l)=}")
+    print(f"{len(new_l)=}")
+    # pprint(new_l)
+
 #     
 #     src_path_str = "C:\\projects\\deprecate_doc\\src\\o_2.docx"
 #     dest_path_str = "C:\\projects\\deprecate_doc\\src\\CUR_VER_TEST_o_2.docx"
@@ -643,11 +679,11 @@ if __name__ == '__main__':
 #     
 #     copy_object_to_path(src_path_str, dest_path_str, copy_dir_content)
     
-    src_path_str = "C:\\Users\\mt204e\\Documents\\temp\\t"
-    dest_path_str = "C:\\Users\\mt204e\\Documents\\temp\\t_CUR_VER"
-    copy_dir_content = True
+    # src_path_str = "C:\\Users\\mt204e\\Documents\\temp\\t"
+    # dest_path_str = "C:\\Users\\mt204e\\Documents\\temp\\t_CUR_VER"
+    # copy_dir_content = True
     
-    copy_object_to_path(src_path_str, dest_path_str, copy_dir_content)
+    # copy_object_to_path(src_path_str, dest_path_str, copy_dir_content)
     
 #     p1 = 'C:\\Users\\mt204e\\Documents\\other\\test_dir'
 #     p3 = ['C:\\Users\\mt204e\\Documents\\other3', 'C:\\Users\\mt204e\\Documents\\other\\test_dir']
