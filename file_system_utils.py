@@ -669,9 +669,10 @@ def get_file_path_l_w_duplicate_files_removed(file_path_l, return_removed_file_p
 
 if __name__ == '__main__':
     print('In Main:  file_system_utils')
-    file_path_l = get_dir_content_l("C:/Users/Brandon/Documents/Other/temp/Family_Guy__Star_Trek__Clip____TBS", "file")
-    new_l = get_file_path_l_w_duplicate_files_removed(file_path_l, True)
+    file_path_l = get_dir_content_l("C:/p/tik_tb_vid_big_data/ignore/BIG_BOY_fg_TBS/YT_PL_DATA/Family_Guy__Star_Trek__Clip____TBS/trim_re_time_wrk", "file")
+    new_l, dup_l = get_file_path_l_w_duplicate_files_removed(file_path_l, True, True)
     print(f"{len(file_path_l)=}")
     print(f"{len(new_l)=}")
+    pprint(dup_l)
 
     print('End of Main:  file_system_utils')
