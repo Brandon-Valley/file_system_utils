@@ -611,7 +611,6 @@ def path_l_to_path_basename_ntl(path_l):
     path_basename_ntl = []
     
     for path in path_l:
-#         print(path)#``````````````````````````````````````````````````````````
         basename = get_basename_from_path(path)
         path_basename_ntl.append(Path_basename_nt(path, basename))
         
@@ -670,72 +669,5 @@ if __name__ == '__main__':
     new_l = get_file_path_l_w_duplicate_files_removed(file_path_l, True)
     print(f"{len(file_path_l)=}")
     print(f"{len(new_l)=}")
-    # pprint(new_l)
-
-#     
-#     src_path_str = "C:\\projects\\deprecate_doc\\src\\o_2.docx"
-#     dest_path_str = "C:\\projects\\deprecate_doc\\src\\CUR_VER_TEST_o_2.docx"
-#     copy_dir_content = True
-#     
-#     copy_object_to_path(src_path_str, dest_path_str, copy_dir_content)
-    
-    # src_path_str = "C:\\Users\\mt204e\\Documents\\temp\\t"
-    # dest_path_str = "C:\\Users\\mt204e\\Documents\\temp\\t_CUR_VER"
-    # copy_dir_content = True
-    
-    # copy_object_to_path(src_path_str, dest_path_str, copy_dir_content)
-    
-#     p1 = 'C:\\Users\\mt204e\\Documents\\other\\test_dir'
-#     p3 = ['C:\\Users\\mt204e\\Documents\\other3', 'C:\\Users\\mt204e\\Documents\\other\\test_dir']
-
-#     copy_object_to_dest_then_rename("C:\\Users\\mt204e\\Documents\\test\\t.txt",
-#                                      "C:\\Users\\mt204e\\Documents\\test\\__test_diiir", 
-#                                      'renamed.txt', copy_dir_content = True)
-# 
-#     copy_object_to_dest_then_rename("C:\\Users\\mt204e\\Documents\\test\\__test_diiirwwwwwwwww",
-#                                      "C:\\Users\\mt204e\\Documents\\test\\_____teeeeeest", 
-#                                      'renamed_diiiiiiir', copy_dir_content = True)
-    
-#     dir_path = "C:\\vuze_downloads\\completed\\test - Copy"
-#     replace_d = {' [Unknown]' : '',
-#                  ' - 1080p'   : '[1080p]'}
-#     rename_dir_contents(dir_path, replace_d, object_type = 'all', recurs_dirs = True)
-#     copy_object_to_dest_then_rename(path_str, dest_parent_dir_path, new_object_name, copy_dir_content)
-    
-#     print(get_dir_content_l(p1, object_type = 'all', content_type = 'rel_path', recurs_dirs = True, rel_to_path=p3))
-
-#     print(paths_compare(p1, p3, compare_mode = 'starts_with'))
-#     print(paths_compare(p3, p1, compare_mode = 'starts_with'))
-# 
-#     print(paths_compare(p3, 'other', compare_mode = 'is_component_name'))
-#     print(path_l_remove(path_l = p3, to_remove_str_or_l = 'other', removal_mode = 'is_component_name'))
-#     print(path_l_remove(path_l = p3, to_remove_str_or_l = 'wwaaaaaaaaaaaaaa', removal_mode = 'paths_equal'))
-# 
-#     print(paths_compare(p3, 'other', compare_mode = 'is_component_name'))
-#     print(path_l_remove(path_l = p3, to_remove_str_or_l = 'other', removal_mode = 'is_component_name'))
-#     print(path_l_remove(path_l = p3, to_remove_str_or_l = 'wwaaaaaaaaaaaaaa', removal_mode = 'paths_equal'))
-
-    
-#     p2 = ['C:\\projects\\version_control_scripts', 'C:\\projects\\version_control_scripts\\CE']
-#     print(paths_equal(p1, p2))
-# 
-#     print(path_l_remove(p2, p1, removal_mode = 'paths_equal'))
-
-#     start_dir = "C:\\projects\\version_control_scripts\\CE"
-#     this_file_abs_path = os.path.dirname(os.path.abspath(__file__))
-#     
-#     app_dir_rel_path = get_rel_path_from_compare(this_file_abs_path, start_dir)
-#     print('this_file_abs_path: ', this_file_abs_path)
-#     
-#      
-#     paths_to_copy_l = get_dir_content_l(start_dir, 'all', 'abs_path')
-     
-#     paths_to_copy_trimmed_l = path_l_remove(paths_to_copy_l, [], removal_mode)
-    
-
-
-
-
-
 
     print('End of Main:  file_system_utils')
