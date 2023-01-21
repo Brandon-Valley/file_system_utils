@@ -1,3 +1,4 @@
+from pathlib import Path
 import filecmp
 import glob
 import os
@@ -166,7 +167,11 @@ def get_dir_content_l(in_dir_path, object_type = 'all', content_type = 'abs_path
     if og_content_type in ('abs_path_basename_nt', 'rel_path_basename_nt'):
         return path_l_to_path_basename_ntl(content_l)
 
-    return content_l
+    # return safe path str for path lists (helpful for spaces in path)
+    if content_type == 'abs_path' or content_type == 'rel_path':
+        return list(str(Path(path)) for path in content_l)
+    else:
+        return content_l
 
 
 
