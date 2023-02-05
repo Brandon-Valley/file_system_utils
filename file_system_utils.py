@@ -630,7 +630,10 @@ def get_file_path_l_w_duplicate_files_removed(file_path_l, return_removed_file_p
     """
     if not isinstance(file_path_l, list):
         raise TypeError(f"file_path_l must be of type list, not {type(file_path_l)}")
+    
     if len(file_path_l) < 2:
+        if return_removed_file_path_l:
+            return file_path_l, []
         return file_path_l
 
     unique_file_path_l = [file_path_l[0]]
