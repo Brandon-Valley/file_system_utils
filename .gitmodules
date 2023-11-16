@@ -1,3 +1,0 @@
-[submodule "usms/exception_utils"]
-	path = usms/exception_utils
-	url = ../exception_utils.git
