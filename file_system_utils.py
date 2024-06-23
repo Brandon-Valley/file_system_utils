@@ -339,6 +339,7 @@ def copy_object_to_path(src_path_str, dest_path_str, copy_dir_content = True):
     eu.error_if_not_is_file_or_is_dir      (src_path_str)
 
     if os.path.isfile(src_path_str):
+        Path(dest_path_str).parent.mkdir(parents=True, exist_ok=True)
         shutil.copy(src_path_str, dest_path_str)
     elif os.path.isdir(src_path_str):
         raise Exception("ERROR: NOT YET IMPLEMENTED")
